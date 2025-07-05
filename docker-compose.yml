@@ -1,0 +1,24 @@
+# A seção 'services' é onde definimos os contêineres que compõem nossa aplicação.
+services:
+  # 'api' é o nome que damos ao nosso serviço (poderia ser qualquer nome, como 'web' ou 'backend').
+  api:
+    # 'build: .' instrui o Docker Compose a construir uma imagem a partir do Dockerfile
+    # localizado no mesmo diretório ('.') que este arquivo docker-compose.yml.
+    build: .
+    # 'container_name' define um nome específico para o contêiner quando ele for executado.
+    # Isso facilita a identificação do contêiner com comandos como `docker ps`.
+    container_name: api
+    # 'ports' mapeia uma porta do seu computador (host) para uma porta dentro do contêiner.
+    # A sintaxe é "HOST:CONTAINER". "8000:8000" significa que a porta 8000 do seu
+    # computador será redirecionada para a porta 8000 do contêiner, onde a API está rodando.
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app # Monta o diretório atual (onde está seu código) em /app dentro do container.
+        # Isso é ótimo para desenvolvimento, pois as alterações no código
+        # são refletidas automaticamente no container devido ao --reload do uvicorn.
+
+    # 'command' sobrescreve o comando padrão (CMD) do Dockerfile.
+    # Aqui, iniciamos o servidor Uvicorn, fazendo-o escutar em todas as interfaces de rede ('0.0.0.0')
+    # dentro do contêiner, na porta 8000.
+    command: uvicorn app:app --host 0.0.0.0 --port 8000
